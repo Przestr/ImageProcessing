@@ -1,44 +1,38 @@
 package com.struminski.imageprocessing;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+
 
 public class Main {
 
-
     public static void main(String[] args) {
-        BufferedImage image = null;
-        int height;
-        int width;
+        BufferedImage image;
+        ImageManager imageManager = new ImageManager();
+        imageManager.loadImage();
+        image = imageManager.getImage();
 
-        try{
-            File input = new File("image.png");
-            image = ImageIO.read(input);
+        int start = 0;
+        int division = image.getHeight() / 4;
+        int end = division;
+        ArrayList<Thread> threadList = new ArrayList<>();
 
+        for (int i = 0; i < 4; i++) {
+            Thread t = new Thread(new Context(new BinarizationAlgorithm(), image, start, end, image.getWidth()));
+            t.start();
+            threadList.add(t);
+            start = division;
+            end += division;
         }
-        catch (IOException e) {
+        try {
+            for (Thread thread : threadList) {
+                thread.join();
+            }
+        } catch (InterruptedException e) {
             System.out.println(e);
         }
 
-        if(image!=null) {
-            width = image.getWidth();
-            height = image.getHeight();
 
-            Context context = new Context(new BinarizationAlgorithm());
-            context.executeStrategy(image, height, width);
-        }
-
-        try{
-            File output = new File("output.png");
-            ImageIO.write(image, "jpg", output);
-
-        }
-        catch (IOException e) {
-            System.out.println(e);
-        }
-
+        imageManager.saveImage();
     }
 }
