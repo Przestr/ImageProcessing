@@ -3,7 +3,8 @@ package com.struminski.imageprocessing;
 public class Main {
 
     public static void main(String[] args) {
-        ImageProcessing imageprocessing = new ImageProcessing();
-        imageprocessing.execute();
+        View view = new View();
+        ImageProcessing imageprocessing = new ImageProcessing(view);
+        imageprocessing.start();
     }
 }

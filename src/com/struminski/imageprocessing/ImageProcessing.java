@@ -1,18 +1,44 @@
 package com.struminski.imageprocessing;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ImageProcessing {
     private ImageManager imageManager;
+    View view;
 
-    public ImageProcessing() {
+    public ImageProcessing(View view) {
+
         imageManager = new ImageManager();
+        this.view = view;
     }
 
-    public void execute() {
+    public void start() {
         if (!imageManager.loadImage()) {
             return;
         }
+        Scanner scanner = new Scanner(System.in);
+        AlgorithmStrategy algorithmStrategy;
+        do {
+            view.showMenu();
+            int option = scanner.nextInt();
+            switch (option) {
+                case 1: {
+                    algorithmStrategy = new BinarizationAlgorithm();
+                    execute(algorithmStrategy);
+                    break;
+                }
+                case 9: {
+                    imageManager.saveImage();
+                    return;
+                }
+                default:
+                    break;
+            }
+        } while (true);
+    }
+
+    public void execute(AlgorithmStrategy algorithmStrategy) {
         int start = 0;
         int threads = 4;
         int division = imageManager.getImage().getHeight() / threads;
@@ -21,13 +47,13 @@ public class ImageProcessing {
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < threads - 1; i++) {
-            Thread t = new Thread(new Context(new BinarizationAlgorithm(), imageManager.getImage(), start, end, imageManager.getImage().getWidth()));
+            Thread t = new Thread(new Context(algorithmStrategy, imageManager.getImage(), start, end, imageManager.getImage().getWidth()));
             t.start();
             threadList.add(t);
             start += division;
             end += division;
         }
-        Thread t = new Thread(new Context(new BinarizationAlgorithm(), imageManager.getImage(), start, imageManager.getImage().getHeight(), imageManager.getImage().getWidth()));
+        Thread t = new Thread(new Context(algorithmStrategy, imageManager.getImage(), start, imageManager.getImage().getHeight(), imageManager.getImage().getWidth()));
         t.start();
         threadList.add(t);
 
@@ -42,7 +68,5 @@ public class ImageProcessing {
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         System.out.println("Execution time: " + duration + " milliseconds");
-
-        imageManager.saveImage();
     }
 }
