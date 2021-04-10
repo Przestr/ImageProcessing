@@ -11,13 +11,15 @@ public class ImageManager {
     public ImageManager() {
     }
 
-    public void loadImage() {
+    public boolean loadImage() {
         try {
-            File input = new File("image.png");
+            File input = new File("obraz.bmp");
             this.image = ImageIO.read(input);
+            return true;
         } catch (IOException e) {
             System.out.println(e);
         }
+        return false;
     }
 
     public void saveImage() {
