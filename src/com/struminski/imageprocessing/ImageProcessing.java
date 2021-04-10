@@ -28,6 +28,11 @@ public class ImageProcessing {
                     execute(algorithmStrategy);
                     break;
                 }
+                case 2: {
+                    algorithmStrategy = new MirrorHorizontalAlgorithm();
+                    execute(algorithmStrategy);
+                    break;
+                }
                 case 9: {
                     imageManager.saveImage();
                     return;
