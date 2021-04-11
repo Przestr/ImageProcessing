@@ -6,5 +6,6 @@ public class Main {
         View view = new View();
         ImageProcessing imageprocessing = new ImageProcessing(view);
         imageprocessing.start();
+        view.setVisible(true);
     }
 }

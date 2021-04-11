@@ -11,9 +11,9 @@ public class ImageManager {
     public ImageManager() {
     }
 
-    public boolean loadImage() {
+    public boolean loadImage(String file) {
         try {
-            File input = new File("obraz.bmp");
+            File input = new File(file);
             this.image = ImageIO.read(input);
             return true;
         } catch (IOException e) {

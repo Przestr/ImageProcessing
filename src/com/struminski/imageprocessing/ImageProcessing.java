@@ -1,46 +1,27 @@
 package com.struminski.imageprocessing;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ImageProcessing {
+
     private ImageManager imageManager;
     View view;
 
     public ImageProcessing(View view) {
-
         imageManager = new ImageManager();
         this.view = view;
+        view.addBinarizationListener(new BinarizationListener());
+        view.addExitListener(new ExitListener());
+        view.addHorizontalMirrorListener(new HorizontalMirrorListener());
+        view.addLoadButton(new LoadListener());
     }
 
     public void start() {
-        if (!imageManager.loadImage()) {
-            return;
-        }
-        Scanner scanner = new Scanner(System.in);
-        AlgorithmStrategy algorithmStrategy;
-        do {
-            view.showMenu();
-            int option = scanner.nextInt();
-            switch (option) {
-                case 1: {
-                    algorithmStrategy = new BinarizationAlgorithm();
-                    execute(algorithmStrategy);
-                    break;
-                }
-                case 2: {
-                    algorithmStrategy = new MirrorHorizontalAlgorithm();
-                    execute(algorithmStrategy);
-                    break;
-                }
-                case 9: {
-                    imageManager.saveImage();
-                    return;
-                }
-                default:
-                    break;
-            }
-        } while (true);
+        view.showMenu(imageManager.getImage());
     }
 
     public void execute(AlgorithmStrategy algorithmStrategy) {
@@ -58,6 +39,7 @@ public class ImageProcessing {
             start += division;
             end += division;
         }
+
         Thread t = new Thread(new Context(algorithmStrategy, imageManager.getImage(), start, imageManager.getImage().getHeight(), imageManager.getImage().getWidth()));
         t.start();
         threadList.add(t);
@@ -73,5 +55,45 @@ public class ImageProcessing {
         long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         System.out.println("Execution time: " + duration + " milliseconds");
+    }
+
+    class LoadListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
+            dialog.setMode(FileDialog.LOAD);
+            dialog.setVisible(true);
+            String file = dialog.getFile();
+            System.out.println(file + " chosen.");
+            imageManager.loadImage(file);
+            view.showMenu(imageManager.getImage());
+            view.revalidate();
+            view.repaint();
+        }
+    }
+
+    class BinarizationListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            AlgorithmStrategy algorithmStrategy = new BinarizationAlgorithm();
+            execute(algorithmStrategy);
+            view.revalidate();
+            view.repaint();
+        }
+    }
+
+    class ExitListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            imageManager.saveImage();
+            view.dispatchEvent(new WindowEvent(view, WindowEvent.WINDOW_CLOSING));
+        }
+    }
+
+    class HorizontalMirrorListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            AlgorithmStrategy algorithmStrategy = new MirrorHorizontalAlgorithm();
+            execute(algorithmStrategy);
+            view.revalidate();
+            view.repaint();
+        }
     }
 }
