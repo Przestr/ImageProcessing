@@ -17,6 +17,7 @@ public class ImageProcessing {
         view.addBinarizationListener(new BinarizationListener());
         view.addExitListener(new ExitListener());
         view.addHorizontalMirrorListener(new HorizontalMirrorListener());
+        view.addGrayScaleListener(new GrayScaleListener());
         view.addLoadButton(new LoadListener());
     }
 
@@ -91,6 +92,15 @@ public class ImageProcessing {
     class HorizontalMirrorListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
             AlgorithmStrategy algorithmStrategy = new MirrorHorizontalAlgorithm();
+            execute(algorithmStrategy);
+            view.revalidate();
+            view.repaint();
+        }
+    }
+
+    class GrayScaleListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            AlgorithmStrategy algorithmStrategy = new GrayScaleAlgorithm();
             execute(algorithmStrategy);
             view.revalidate();
             view.repaint();

@@ -13,6 +13,7 @@ public class View extends JFrame {
     private JButton loadButton = new JButton("Load image");
     private JButton binarizationButton = new JButton("Binarization");
     private JButton horizontalMirrorButton = new JButton("Horizontal mirror effect");
+    private JButton grayScaleButton = new JButton("Gray scale");
     private JButton exitButton = new JButton("Save and exit");
 
     public View() {
@@ -34,6 +35,8 @@ public class View extends JFrame {
             q.add(binarizationButton);
             q.add(Box.createVerticalStrut(10));
             q.add(horizontalMirrorButton);
+            q.add(Box.createVerticalStrut(10));
+            q.add(grayScaleButton);
             q.add(Box.createVerticalStrut(10));
             q.add(exitButton);
             q.add(Box.createVerticalStrut(10));
@@ -62,6 +65,10 @@ public class View extends JFrame {
 
     void addHorizontalMirrorListener(ActionListener listenForHorizontalMirrorButton) {
         horizontalMirrorButton.addActionListener(listenForHorizontalMirrorButton);
+    }
+
+    void addGrayScaleListener(ActionListener listenForGrayScaleButton) {
+        grayScaleButton.addActionListener(listenForGrayScaleButton);
     }
 
     void addExitListener(ActionListener listenForExitButton) {
