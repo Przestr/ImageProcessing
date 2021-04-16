@@ -15,6 +15,7 @@ public class View extends JFrame {
     private JButton horizontalMirrorButton = new JButton("Horizontal mirror effect");
     private JButton grayScaleButton = new JButton("Gray scale");
     private JButton toningButton = new JButton("Toning");
+    private JButton undoButton = new JButton("Undo last operation");
     private JButton exitButton = new JButton("Save and exit");
 
     public View() {
@@ -40,6 +41,8 @@ public class View extends JFrame {
             q.add(grayScaleButton);
             q.add(Box.createVerticalStrut(10));
             q.add(toningButton);
+            q.add(Box.createVerticalStrut(10));
+            q.add(undoButton);
             q.add(Box.createVerticalStrut(10));
             q.add(exitButton);
             q.add(Box.createVerticalStrut(10));
@@ -76,6 +79,10 @@ public class View extends JFrame {
 
     void addToningListener(ActionListener listenForToningButton) {
         toningButton.addActionListener(listenForToningButton);
+    }
+
+    void addUndoListener(ActionListener listenForUndoButton) {
+        undoButton.addActionListener(listenForUndoButton);
     }
 
     void addExitListener(ActionListener listenForExitButton) {

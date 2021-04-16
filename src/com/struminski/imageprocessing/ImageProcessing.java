@@ -19,6 +19,7 @@ public class ImageProcessing {
         view.addHorizontalMirrorListener(new HorizontalMirrorListener());
         view.addGrayScaleListener(new GrayScaleListener());
         view.addToningListener(new ToningListener());
+        view.addUndoListener(new UndoListener());
         view.addLoadButton(new LoadListener());
     }
 
@@ -27,6 +28,7 @@ public class ImageProcessing {
     }
 
     public void execute(AlgorithmStrategy algorithmStrategy) {
+        imageManager.makeCopy();
         int start = 0;
         int threads = 4;
         int division = imageManager.getImage().getHeight() / threads;
@@ -112,6 +114,14 @@ public class ImageProcessing {
         public void actionPerformed(ActionEvent arg0) {
             AlgorithmStrategy algorithmStrategy = new ToningAlgorithm();
             execute(algorithmStrategy);
+            view.revalidate();
+            view.repaint();
+        }
+    }
+
+    class UndoListener implements ActionListener {
+        public void actionPerformed(ActionEvent arg0) {
+            imageManager.restoreCopy();
             view.revalidate();
             view.repaint();
         }
